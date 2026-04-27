@@ -30,9 +30,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install tessl
-        run: curl -sSfL https://tessl.io/install.sh | bash
-      - name: Verify tessl is on PATH
-        run: tessl --version
+        uses: tesslio/setup-tessl@v2
+        with:
+          token: ${{ secrets.TESSL_TOKEN }}
       - name: Run tessl tile lint
         run: tessl tile lint
 
