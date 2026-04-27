@@ -50,8 +50,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install tessl
-        run: curl -sSfL https://tessl.io/install.sh | bash
+        uses: tesslio/setup-tessl@v2
+        with:
+          token: ${{ secrets.TESSL_TOKEN }}
       - name: Review skill ${{ matrix.skill }}
-        env:
-          TESSL_TOKEN: ${{ secrets.TESSL_TOKEN }}
         run: tessl skill review --threshold 85 skills/${{ matrix.skill }}
