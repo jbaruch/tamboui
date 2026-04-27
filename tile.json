@@ -1,9 +1,16 @@
 {
   "name": "jbaruch/tamboui",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "summary": "Teaches coding agents how to build TUIs with TamboUI correctly: API-level selection, render-thread discipline, display-width safety, CSS-aware element authoring, and JFR conventions.",
   "entrypoint": "README.md",
-  "keywords": ["tamboui", "tui", "java", "ratatui", "terminal-ui", "jline"],
+  "keywords": [
+    "tamboui",
+    "tui",
+    "java",
+    "ratatui",
+    "terminal-ui",
+    "jline"
+  ],
   "steering": {
     "pick-the-api-level": {
       "rules": "rules/pick-the-api-level.md",
