@@ -1,0 +1,56 @@
+{
+  "context": "Tests the agent's application of the tile's CSS-aware element-style-resolution pattern. The task says the three sub-components must be styleable three ways with a specific precedence order, but does not name `resolveEffectiveStyle`, the nullable-Style-field pattern, the DEFAULT_X_STYLE constant convention, the JavaDoc CSS-Child-Selectors heading, or any specific child-selector keyword — those choices are the tile's contribution.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Three nullable Style fields",
+      "max_score": 12,
+      "description": "The HistogramElement class declares three Style fields (one per sub-component: bar body, count label, axis label) with no inline initializer. Fields are NOT initialized to `Style.EMPTY` — that breaks CSS resolution because the explicit-vs-CSS check sees a non-null value."
+    },
+    {
+      "name": "Three DEFAULT_*_STYLE constants",
+      "max_score": 10,
+      "description": "Three `private static final Style DEFAULT_<NAME>_STYLE = ...` constants exist alongside the three nullable fields, one per sub-component. These are the fallback when both the explicit field and CSS produce nothing."
+    },
+    {
+      "name": "resolveEffectiveStyle in render path",
+      "max_score": 18,
+      "description": "The render method (e.g. `renderContent`) calls `resolveEffectiveStyle(context, \"<child-name>\", <field>, <DEFAULT>)` once per sub-component. Does NOT manually pick `field != null ? field : DEFAULT` — that bypasses the CSS layer of the precedence."
+    },
+    {
+      "name": "Toolkit factory method added",
+      "max_score": 10,
+      "description": "`Toolkit.java` gains a `public static HistogramElement histogram(...)` factory method matching the lower-camel-case convention used by the existing factories (`gauge`, `barChart`, `lineGauge`, etc.)."
+    },
+    {
+      "name": "Fluent setters return this",
+      "max_score": 8,
+      "description": "Each style setter (e.g. `barStyle(Style)`, `labelStyle(Style)`, `axisStyle(Style)`) returns `this` so callers can chain — matches the rest of the toolkit DSL."
+    },
+    {
+      "name": "JavaDoc CSS Child Selectors block",
+      "max_score": 12,
+      "description": "The HistogramElement class JavaDoc contains an HTML `<h2>CSS Child Selectors</h2>` heading followed by a list of every `HistogramElement-<name>` selector with its default. Without this, a CSS-aware field is undocumented and unfindable."
+    },
+    {
+      "name": "AGENTS.md table updated",
+      "max_score": 8,
+      "description": "`AGENTS.md` gains exactly one new row in the existing 'Available CSS Child Selectors' table, listing the three child selector suffixes for HistogramElement. Does not duplicate or rewrite other rows."
+    },
+    {
+      "name": "Test asserts via BufferAssertions",
+      "max_score": 10,
+      "description": "The JUnit 5 test renders into a `Buffer` at a fixed `Rect` and asserts via `BufferAssertions` (the project's preferred test fixture) rather than ad-hoc `assertEquals` on cell-by-cell strings."
+    },
+    {
+      "name": "Java 8 source compatibility preserved",
+      "max_score": 7,
+      "description": "Library-side files (HistogramElement.java, Toolkit.java) avoid Java-9+ language features: no `var`, no text blocks, no records, no `List.of`, no pattern-matching `instanceof`/`switch`. The test file may use newer features."
+    },
+    {
+      "name": "Render-thread invariant respected",
+      "max_score": 5,
+      "description": "Any custom render helpers that mutate shared element state call `RenderThread.checkRenderThread()` at entry, OR rely on `StyledElement` superclass behavior (which already enforces this). Pure read-only render code is fine without an explicit check."
+    }
+  ]
+}

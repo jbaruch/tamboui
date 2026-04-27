@@ -1,0 +1,66 @@
+{
+  "context": "Tests whether the agent correctly implements a JFR event following TamboUI project conventions: proper @Name format (no 'Event' suffix in name), correct package placement, required class structure and annotations, static enabled() guard, static commit() helper naming and structure, compileOnly polyfill dependency, and correct guard pattern at call sites.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "@Name no 'Event'",
+      "max_score": 10,
+      "description": "The @Name annotation value uses the format dev.tamboui.{area}.{thing} and does NOT include the word 'Event' (e.g., dev.tamboui.toolkit.render, not dev.tamboui.toolkit.renderEvent)"
+    },
+    {
+      "name": "Correct package",
+      "max_score": 8,
+      "description": "The event class declares package dev.tamboui.toolkit.jfr (not dev.tamboui.jfr, not dev.tamboui.toolkit)"
+    },
+    {
+      "name": "public final class",
+      "max_score": 7,
+      "description": "The event class is declared as 'public final class'"
+    },
+    {
+      "name": "Extends jdk.jfr.Event",
+      "max_score": 7,
+      "description": "The event class extends jdk.jfr.Event"
+    },
+    {
+      "name": "All 4 class annotations",
+      "max_score": 8,
+      "description": "The event class has all four annotations: @Name, @Label, @Category, and @Description"
+    },
+    {
+      "name": "@Label on fields",
+      "max_score": 7,
+      "description": "Each payload field (element name, width, height, duration) has a @Label annotation"
+    },
+    {
+      "name": "enabled() on class",
+      "max_score": 10,
+      "description": "A static boolean enabled() method is defined directly on the event class (not on a separate tracer or helper class)"
+    },
+    {
+      "name": "commit() helper name",
+      "max_score": 8,
+      "description": "The static emission helper is named 'commit' — NOT 'trace', 'record', 'emit', or any other name"
+    },
+    {
+      "name": "commit() minimal body",
+      "max_score": 7,
+      "description": "The commit() helper body contains only: create event instance, set fields, call commit() — it contains NO if-branches, no enabled() guard, no try-catch"
+    },
+    {
+      "name": "compileOnly polyfill",
+      "max_score": 10,
+      "description": "The build snippet includes compileOnly(libs.jfr.polyfill) and does NOT add the polyfill to the runtime classpath (no implementation() or runtimeOnly())"
+    },
+    {
+      "name": "Guard at call site",
+      "max_score": 10,
+      "description": "The call-site example wraps the commit call in an if (ToolkitRenderEvent.enabled()) { ... } guard — both the check and the commit are present"
+    },
+    {
+      "name": "Timestamps inside guard",
+      "max_score": 8,
+      "description": "Any timestamp capture (e.g., System.nanoTime()) in the call-site example appears INSIDE the enabled() guard, not outside it"
+    }
+  ]
+}

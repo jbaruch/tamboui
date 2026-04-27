@@ -1,0 +1,52 @@
+{
+  "name": "jbaruch/tamboui",
+  "version": "0.1.0",
+  "summary": "Teaches coding agents how to build TUIs with TamboUI correctly: API-level selection, render-thread discipline, display-width safety, CSS-aware element authoring, and JFR conventions.",
+  "entrypoint": "README.md",
+  "keywords": ["tamboui", "tui", "java", "ratatui", "terminal-ui", "jline"],
+  "steering": {
+    "pick-the-api-level": {
+      "rules": "rules/pick-the-api-level.md",
+      "alwaysApply": true
+    },
+    "render-thread-discipline": {
+      "rules": "rules/render-thread-discipline.md",
+      "alwaysApply": true
+    },
+    "char-width-for-display": {
+      "rules": "rules/char-width-for-display.md",
+      "alwaysApply": true
+    },
+    "exception-hierarchy": {
+      "rules": "rules/exception-hierarchy.md",
+      "alwaysApply": true
+    },
+    "resource-lifecycle": {
+      "rules": "rules/resource-lifecycle.md",
+      "alwaysApply": true
+    },
+    "css-element-style-resolution": {
+      "rules": "rules/css-element-style-resolution.md",
+      "alwaysApply": true
+    },
+    "jfr-event-conventions": {
+      "rules": "rules/jfr-event-conventions.md",
+      "alwaysApply": true
+    },
+    "java-8-source-compat": {
+      "rules": "rules/java-8-source-compat.md",
+      "alwaysApply": true
+    }
+  },
+  "skills": {
+    "scaffold-toolkit-app": {
+      "path": "skills/scaffold-toolkit-app/SKILL.md"
+    },
+    "wrap-widget-as-element": {
+      "path": "skills/wrap-widget-as-element/SKILL.md"
+    },
+    "add-jfr-event": {
+      "path": "skills/add-jfr-event/SKILL.md"
+    }
+  }
+}

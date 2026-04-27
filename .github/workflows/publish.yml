@@ -1,0 +1,40 @@
+name: publish
+
+# Auto-publish the tile to the tessl registry on every push to main.
+# Uses tesslio/patch-version-publish: queries the registry for the latest
+# published version, auto-bumps the patch if tile.json is at-or-behind the
+# registry, and commits the bumped version back with [skip ci].
+#
+# Required secret: TESSL_TOKEN (https://tessl.io/settings/tokens)
+# Configure at: https://github.com/jbaruch/tamboui/settings/secrets/actions
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  publish:
+    name: tessl tile publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - name: Smart publish
+        id: publish
+        uses: tesslio/patch-version-publish@main
+        with:
+          token: ${{ secrets.TESSL_TOKEN }}
+      - name: Print published version
+        run: echo "Published jbaruch/tamboui@${{ steps.publish.outputs.version }}"

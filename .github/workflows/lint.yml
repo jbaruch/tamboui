@@ -1,0 +1,57 @@
+name: lint
+
+# Pre-publish checks for the jbaruch/tamboui tessl tile.
+# Runs on every PR and on every push to main; the publish workflow runs after.
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  script-tests:
+    name: scripts — bash test suite
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run script tests
+        run: bash scripts/tests/run-all.sh
+
+  tile-lint:
+    name: tile — lint
+    runs-on: ubuntu-latest
+    needs: script-tests
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install tessl
+        run: curl -sSfL https://tessl.io/install.sh | bash
+      - name: Verify tessl is on PATH
+        run: tessl --version
+      - name: Run tessl tile lint
+        run: tessl tile lint
+
+  skill-review:
+    name: skills — review at threshold 85
+    runs-on: ubuntu-latest
+    needs: tile-lint
+    strategy:
+      fail-fast: false
+      matrix:
+        skill:
+          - scaffold-toolkit-app
+          - wrap-widget-as-element
+          - add-jfr-event
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install tessl
+        run: curl -sSfL https://tessl.io/install.sh | bash
+      - name: Review skill ${{ matrix.skill }}
+        env:
+          TESSL_TOKEN: ${{ secrets.TESSL_TOKEN }}
+        run: tessl skill review --threshold 85 skills/${{ matrix.skill }}

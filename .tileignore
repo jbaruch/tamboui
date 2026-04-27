@@ -1,0 +1,14 @@
+# Standalone tile repo — only the tile artifacts ship; everything else is excluded.
+
+# OS / editor noise
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# Tile-internal: tests and CI are part of the repo but not the tile package
+scripts/tests/
+.github/
+
+# Eval scenarios are uploaded by `tessl tile publish` separately
+evals/

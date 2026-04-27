@@ -1,0 +1,41 @@
+{
+  "context": "Tests whether the agent pushes back on two tile-violating proposals: (1) naming the helper `trace(...)` instead of the JDK-conventional `commit(...)`, and (2) making the helper unconditionally commit the event without an `enabled()` guard at the call site. The tile's JFR rule is explicit that the helper must be named `commit` and that the guard belongs at the call site, not inside the helper. The right behavior is to refuse both points and explain why.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Refuses the `trace` name",
+      "max_score": 20,
+      "description": "Explicitly recommends `commit(...)` over `trace(...)` as the helper name, citing the JDK convention and consistency with the rest of the project's JFR event helpers. Does not silently apply the change as proposed."
+    },
+    {
+      "name": "Refuses the unguarded shape",
+      "max_score": 25,
+      "description": "Explicitly rejects the 'always commits, no guard' design. Insists the call-site `if (TerminalDrawEvent.enabled()) { ... }` guard is required so callers avoid building payload values when JFR is off. Does not just hand-wave 'we'll add the guard later'."
+    },
+    {
+      "name": "Explains the allocation argument",
+      "max_score": 15,
+      "description": "Explains *why* the guard belongs at the call site: when JFR is disabled, the call site should avoid event allocation AND avoid computing payload arguments (e.g. timestamps, counts) that the helper would receive. Embedding the guard inside the helper does not save the argument-evaluation cost at the call site."
+    },
+    {
+      "name": "Proposes the correct alternative shape",
+      "max_score": 20,
+      "description": "Concretely proposes the right design: (a) static `commit(long durationNanos)` helper on `TerminalDrawEvent` whose body is just create-populate-commit, AND (b) call sites use `if (TerminalDrawEvent.enabled()) { TerminalDrawEvent.commit(durationNanos); }`. Both pieces are named."
+    },
+    {
+      "name": "Does not let the @Name string drift",
+      "max_score": 8,
+      "description": "Does not propose any change to the existing `@Name(...)` string on `TerminalDrawEvent` — the JFR-visible event name is already correct (`dev.tamboui.terminal.draw`) and changing it would break existing dashboards and recordings."
+    },
+    {
+      "name": "Maintains review-thread tone",
+      "max_score": 7,
+      "description": "Frames the answer as a constructive code-review reply (acknowledges the convenience goal, explains the constraint, proposes the alternative). Does not just say 'no' or quote the rule without explaining."
+    },
+    {
+      "name": "Does not invent unrelated changes",
+      "max_score": 5,
+      "description": "Stays scoped to the helper-shape question. Does not propose renaming the event class, restructuring the JFR package, adding new events, or changing the `compileOnly(libs.jfr.polyfill)` declaration — none of those are at issue here."
+    }
+  ]
+}

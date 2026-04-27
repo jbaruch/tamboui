@@ -1,0 +1,19 @@
+.DS_Store
+*.swp
+.idea/
+.vscode/
+node_modules/
+build/
+out/
+bin/
+
+# Local tessl tooling — don't ship workspace state
+.tessl/
+.agents/
+.claude/
+.codex/
+.gemini/
+.mcp.json
+tessl.json
+AGENTS.md
+CLAUDE.md
