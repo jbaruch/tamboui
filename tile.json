@@ -1,6 +1,6 @@
 {
   "name": "jbaruch/tamboui",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "summary": "Teaches coding agents how to build TUIs with TamboUI correctly: API-level selection, render-thread discipline, display-width safety, CSS-aware element authoring, and JFR conventions.",
   "entrypoint": "README.md",
   "keywords": [
