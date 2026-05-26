@@ -10,6 +10,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ### Added
 
+- Six always-apply rules surfaced by building the [jclaw-demo](https://github.com/jbaruch/jclaw-demo) three-pane TUI against TamboUI `0.2.1-SNAPSHOT` (jbaruch/tamboui#1):
+  - `persistent-stateful-elements` — hold `ListElement` / `TableElement` / `TextInputState` as fields so scroll position, selection, and cursor survive across renders.
+  - `enable-mouse-capture-when-scrollable` — override `configure()` with `TuiConfig.builder().mouseCapture(true)` whenever the app uses a scrollable widget.
+  - `focusable-needs-id` — every `.focusable()` must be paired with `.id(...)`; without an id the focus manager refuses to register the element.
+  - `pick-the-text-element` — decision tree for `text` / `richText` / `richTextArea` / `markupText` / `list`, including the wrap-height-in-column trap and the container-only-constraints note.
+  - `projector-safe-colors` — avoid `.dim()` and `Color.GRAY` for foreground text in demo/conference contexts; prefer saturated primaries.
+  - `text-input-submit-pattern` — `.onSubmit(Runnable)` reads the submitted line from the bound `TextInputState` and must call `state.clear()` after handling.
 - Eval scenarios under `evals/` covering all three skills with a mix of positive and negative cases, merged from `tessl scenario generate` output and hand-authored scenarios. Generator scenarios won for `scaffold-toolkit-dsl-app` and `jfr-event-conventions` (cleaner, no task-to-criterion bleeding); hand-authored kept for `wrap-histogram-positive` (no inline widget source, vaguer doc location for stronger lift).
 - Bash-script tests for `scripts/list-tamboui-modules.sh` and `scripts/check-display-width.sh` under `scripts/tests/`.
 - GitHub Actions workflow `.github/workflows/tile.yml` that runs `tessl tile lint` and `tessl skill review --threshold 85` on changes under tile-owned paths.
