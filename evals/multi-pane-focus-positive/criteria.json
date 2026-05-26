@@ -1,0 +1,51 @@
+{
+  "context": "Tests the agent's application of the tile's multi-pane-focus recipe: stable id constants, explicit initial-focus override in onStart() via the focus manager (the tile's chosen mechanism, not 'set focus on the field directly'), a focused-pane-border helper keyed on focusManager.focusedId(), a projector-safe color choice for the unfocused border (not Color.GRAY, per rules/projector-safe-colors.md), and the mouseCapture(true) configure() override that makes click-to-focus work (per rules/enable-mouse-capture-when-scrollable.md). The task lists four observable symptoms without naming the API surfaces — focusManager / focusedId / setFocus / mouseCapture / onStart — those choices are the tile's contribution.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Three pane ids declared as constants",
+      "max_score": 10,
+      "description": "Three named string constants are declared (one per pane, e.g. `CHAT_ID`, `TRACE_ID`, `PROMPT_ID`) and used both at the `.id(...)` registration site and at any `setFocus(...)` site. Inline string literals at both places (typo-prone) score zero on this criterion. The tile prescribes constants because typos are silent."
+    },
+    {
+      "name": ".id(...).focusable() on every pane",
+      "max_score": 10,
+      "description": "Each of the three panes shows `.id(<CONSTANT>).focusable()` in its builder chain — BOTH modifiers, on every pane. `.focusable()` without `.id(...)` is dropped from the focus chain; see rules/focusable-needs-id.md."
+    },
+    {
+      "name": "Initial focus set in onStart() via focus manager",
+      "max_score": 15,
+      "description": "The class overrides `onStart()` (not the constructor, not a render-side branch) and calls `runner().focusManager().setFocus(PROMPT_ID)` (or the equivalent navigation to the focus manager's setFocus method, addressed by the prompt's id constant). Constructor-time focus setting fails because the focus manager is not yet wired."
+    },
+    {
+      "name": "Focus polled via focusManager.focusedId() in render()",
+      "max_score": 12,
+      "description": "The render path looks up the currently focused id via `runner().focusManager().focusedId()` (or equivalent) and uses that value to decide each pane's border. Hard-coding which pane is focused, or keeping a parallel `private boolean chatFocused` field, scores zero — the focus manager IS the source of truth."
+    },
+    {
+      "name": "Focused-border helper is one method, used per pane",
+      "max_score": 10,
+      "description": "A single helper method/function maps a pane id to a border color (e.g. `fun paneBorder(id) = if (focusedId() == id) ACTIVE else INACTIVE`), and is called once per pane in `render()`. Per-pane copy-pasted if-branches score lower — the task explicitly asks for ergonomics that make adding a fourth pane a one-liner."
+    },
+    {
+      "name": "Unfocused border uses a projector-safe color",
+      "max_score": 13,
+      "description": "The unfocused-pane border color is NOT `Color.GRAY`, NOT `.dim()`, NOT a custom RGB near neutral gray (`#888`, `#bbb`). Acceptable choices: `Color.WHITE`, a saturated low-priority color (e.g. blue or magenta), or a bold-but-neutral style. The task explicitly cites the prior gray-border rejection — see rules/projector-safe-colors.md."
+    },
+    {
+      "name": "Focused border uses a distinct saturated color",
+      "max_score": 8,
+      "description": "The focused-pane border color is a saturated primary (`Color.GREEN`, `Color.CYAN`, `Color.MAGENTA`, `Color.YELLOW`, `Color.RED`) that is visibly distinct from the unfocused color. Two near-identical shades fail the 'audience can spot it from across a room' requirement."
+    },
+    {
+      "name": "configure() override enables mouseCapture(true)",
+      "max_score": 14,
+      "description": "The class overrides `configure()` and returns `TuiConfig.builder().mouseCapture(true).build()` (or equivalent). This fixes the 'clicking on a pane does nothing' symptom — without it, the focus manager never receives click events. See rules/enable-mouse-capture-when-scrollable.md."
+    },
+    {
+      "name": "No per-pane Tab-handling code",
+      "max_score": 8,
+      "description": "The solution does NOT register custom KeyEvent handlers for `Tab` / `Shift+Tab` — Toolkit's built-in focus chain cycles for free once panes are registered with ids. Reinventing Tab cycling is a known anti-pattern and the task explicitly notes Tab already works."
+    }
+  ]
+}
