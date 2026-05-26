@@ -47,6 +47,8 @@ jobs:
           - scaffold-toolkit-app
           - wrap-widget-as-element
           - add-jfr-event
+          - build-log-style-list
+          - multi-pane-focus
     steps:
       - uses: actions/checkout@v4
       - name: Install tessl

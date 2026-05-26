@@ -40,6 +40,8 @@ Run this from your TamboUI consumer project (or from the TamboUI repo itself if 
 | [scaffold-toolkit-app](skills/scaffold-toolkit-app/SKILL.md) | Bootstrap a new TUI app using the Toolkit DSL. |
 | [wrap-widget-as-element](skills/wrap-widget-as-element/SKILL.md) | Add a Toolkit `Element` wrapping a widget, with proper CSS child-selector support. |
 | [add-jfr-event](skills/add-jfr-event/SKILL.md) | Add a new JFR event under `dev.tamboui.{area}` with the project's conventions. |
+| [build-log-style-list](skills/build-log-style-list/SKILL.md) | Build a scrollable log/chat pane with sticky scroll, scrollbar, mouse wheel, focus, and pre-wrap for long lines. |
+| [multi-pane-focus](skills/multi-pane-focus/SKILL.md) | Wire stable ids, initial focus in `onStart()`, and a projector-safe focused-pane border across multiple panes. |
 
 ## Scripts
 
@@ -73,6 +75,8 @@ tessl tile lint
 tessl skill review --threshold 85 skills/scaffold-toolkit-app
 tessl skill review --threshold 85 skills/wrap-widget-as-element
 tessl skill review --threshold 85 skills/add-jfr-event
+tessl skill review --threshold 85 skills/build-log-style-list
+tessl skill review --threshold 85 skills/multi-pane-focus
 ```
 
 CI runs the same set on every PR (`.github/workflows/lint.yml`).

@@ -78,6 +78,12 @@
     },
     "add-jfr-event": {
       "path": "skills/add-jfr-event/SKILL.md"
+    },
+    "build-log-style-list": {
+      "path": "skills/build-log-style-list/SKILL.md"
+    },
+    "multi-pane-focus": {
+      "path": "skills/multi-pane-focus/SKILL.md"
     }
   }
 }
