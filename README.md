@@ -26,6 +26,12 @@ Run this from your TamboUI consumer project (or from the TamboUI repo itself if 
 | [css-element-style-resolution](rules/css-element-style-resolution.md) | Nullable style fields + `resolveEffectiveStyle` for CSS-aware elements. |
 | [jfr-event-conventions](rules/jfr-event-conventions.md) | Naming, `enabled()` guards, `commit(...)` helpers, JFR polyfill for Java 8. |
 | [java-8-source-compat](rules/java-8-source-compat.md) | Library modules are Java 8; demos can use Java 21+. |
+| [persistent-stateful-elements](rules/persistent-stateful-elements.md) | Hold stateful elements (list, table, textInput) as fields — never rebuild inline in `render()`. |
+| [enable-mouse-capture-when-scrollable](rules/enable-mouse-capture-when-scrollable.md) | Override `configure()` with `mouseCapture(true)` whenever the app uses a scrollable widget. |
+| [focusable-needs-id](rules/focusable-needs-id.md) | Every `.focusable()` must be paired with `.id(...)`, else the focus chain silently drops the element. |
+| [pick-the-text-element](rules/pick-the-text-element.md) | Decision tree for `text` / `richText` / `richTextArea` / `markupText` / `list` — wrap-height is the load-bearing distinction. |
+| [projector-safe-colors](rules/projector-safe-colors.md) | Avoid `.dim()` and `Color.GRAY` for foreground text in demo/conference contexts; prefer saturated primaries. |
+| [text-input-submit-pattern](rules/text-input-submit-pattern.md) | `onSubmit(Runnable)` reads the line from `TextInputState`; always `state.clear()` at the end. |
 
 ## Skills
 

@@ -43,6 +43,30 @@
     "java-8-source-compat": {
       "rules": "rules/java-8-source-compat.md",
       "alwaysApply": true
+    },
+    "persistent-stateful-elements": {
+      "rules": "rules/persistent-stateful-elements.md",
+      "alwaysApply": true
+    },
+    "enable-mouse-capture-when-scrollable": {
+      "rules": "rules/enable-mouse-capture-when-scrollable.md",
+      "alwaysApply": true
+    },
+    "focusable-needs-id": {
+      "rules": "rules/focusable-needs-id.md",
+      "alwaysApply": true
+    },
+    "pick-the-text-element": {
+      "rules": "rules/pick-the-text-element.md",
+      "alwaysApply": true
+    },
+    "projector-safe-colors": {
+      "rules": "rules/projector-safe-colors.md",
+      "alwaysApply": true
+    },
+    "text-input-submit-pattern": {
+      "rules": "rules/text-input-submit-pattern.md",
+      "alwaysApply": true
     }
   },
   "skills": {
