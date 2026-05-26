@@ -1,0 +1,56 @@
+{
+  "context": "Tests the agent's application of the tile's log-style-list recipe: the three highlight-killing modifiers (selected(-1), highlightSymbol(\"\"), highlightStyle(Style.EMPTY)) needed to suppress the default menu-style first-row inversion, the persistent-element-as-field pattern from rules/persistent-stateful-elements.md, the mouseCapture(true) configure() override from rules/enable-mouse-capture-when-scrollable.md, and the pre-wrap-into-multiple-rows pattern from rules/pick-the-text-element.md. The task says what the pane must DO (no selection look, auto-scroll-unless-scrolled-away, mouse wheel, survive renders, wrap long lines) without naming any specific modifier, method, or config flag — those choices are the tile's contribution.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "List held as field, not built inline in render()",
+      "max_score": 14,
+      "description": "The ListElement is declared as a class field (Kotlin `val` / Java `final`), and `render()` references the field rather than calling `list(...)` inline. A fresh ListElement per render drops the user's scroll-away flag — the tile's persistent-stateful-elements rule mandates the field pattern."
+    },
+    {
+      "name": "Backing collection held as a field",
+      "max_score": 6,
+      "description": "The backing line collection (e.g. `private final List<String> lines = ...` or `private val lines = mutableListOf<String>()`) is also a class field, so background-thread additions can survive re-renders. Not building a new list literal every render."
+    },
+    {
+      "name": "selected(-1) suppresses default selection",
+      "max_score": 10,
+      "description": "The list-builder chain includes `.selected(-1)` (or the equivalent negative-index sentinel the API exposes for 'no item is selected'). Without this, the default `list(...)` highlights row 0 — visible as an inverted first-row stripe an audience reads as a rendering bug."
+    },
+    {
+      "name": "highlightSymbol(\"\") removes the prefix marker",
+      "max_score": 8,
+      "description": "The chain includes `.highlightSymbol(\"\")` — passing an empty string. The default `> ` prefix on the selected row looks like a menu cursor and is wrong for a log pane."
+    },
+    {
+      "name": "highlightStyle(Style.EMPTY) removes inverted colors",
+      "max_score": 8,
+      "description": "The chain includes `.highlightStyle(Style.EMPTY)` (or equivalent). Just suppressing the selection symbol is not enough — the highlighted row also inverts foreground/background by default, so you must explicitly empty the highlight style."
+    },
+    {
+      "name": "stickyScroll() and scrollbar() both present",
+      "max_score": 8,
+      "description": "The chain includes both `.stickyScroll()` (auto-scrolls to follow new output, but stops when the user scrolls away) and `.scrollbar()` (visible position indicator on the right edge). Both modifiers, not just one."
+    },
+    {
+      "name": "configure() overridden with mouseCapture(true)",
+      "max_score": 14,
+      "description": "The ToolkitApp overrides `configure()` and returns `TuiConfig.builder().mouseCapture(true).build()` (or equivalent). Without this override, wheel events never reach `ListElement.handleMouseEvent` even though the element already handles them correctly — the tile's enable-mouse-capture-when-scrollable rule mandates this for any scrollable widget."
+    },
+    {
+      "name": ".id(...).focusable() pair on the pane",
+      "max_score": 10,
+      "description": "The chain includes BOTH `.id(\"<some-stable-id>\")` AND `.focusable()`. `.focusable()` without an id is silently dropped by the focus manager — see rules/focusable-needs-id.md. Both, never one without the other."
+    },
+    {
+      "name": "Pre-wrap helper for long lines",
+      "max_score": 12,
+      "description": "A helper (function/method) exists that breaks a long input line into multiple short rows that fit `WRAP_WIDTH`, AND those wrapped rows are individually added to the backing collection (so each rendered row IS one wrapped chunk, not one logical line). Auto-wrap inside a list cell falls back to ellipsis truncation — the tile prescribes pre-wrap-into-rows."
+    },
+    {
+      "name": "Background-thread add hops to render thread",
+      "max_score": 10,
+      "description": "The append helper used from a background thread wraps the mutation in `runOnRenderThread(...)` (or equivalent) before touching the backing collection or the list element. Direct off-thread mutation will corrupt rendering under load — see rules/render-thread-discipline.md."
+    }
+  ]
+}
