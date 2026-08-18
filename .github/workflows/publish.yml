@@ -1,12 +1,8 @@
 name: publish
 
-# Auto-publish the tile to the tessl registry on every push to main.
-# Uses tesslio/patch-version-publish: queries the registry for the latest
-# published version, auto-bumps the patch if tile.json is at-or-behind the
-# registry, and commits the bumped version back with [skip ci].
-#
-# Required secret: TESSL_TOKEN (https://tessl.io/settings/tokens)
-# Configure at: https://github.com/jbaruch/tamboui/settings/secrets/actions
+# Thin caller for the canonical fleet publish pipeline
+# (jbaruch/coding-policy#206). Display name preserved for run-name watchers.
+# See docs/fleet-publish-setup.md in jbaruch/coding-policy for the contract.
 
 on:
   push:
@@ -14,27 +10,13 @@ on:
       - main
   workflow_dispatch:
 
-concurrency:
-  group: publish
-  cancel-in-progress: false
-
 permissions:
-  contents: write
+  id-token: write
+  contents: write        # smart-publish pushes the auto-bump commit to the protected branch
   pull-requests: write
 
 jobs:
   publish:
-    name: tessl tile publish
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 0
-      - name: Smart publish
-        id: publish
-        uses: tesslio/patch-version-publish@main
-        with:
-          token: ${{ secrets.TESSL_TOKEN }}
-      - name: Print published version
-        run: echo "Published jbaruch/tamboui@${{ steps.publish.outputs.version }}"
+    uses: jbaruch/coding-policy/.github/workflows/publish-plugin.yml@1fca7dde58fbe334e04ecd0e310f37307c141c42
+    secrets:
+      TESSL_TOKEN: ${{ secrets.TESSL_TOKEN }}
